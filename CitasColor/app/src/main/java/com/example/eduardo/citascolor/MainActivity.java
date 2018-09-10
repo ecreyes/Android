@@ -6,9 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import java.util.ArrayList;
-
-import java.util.Random;
 
 public class MainActivity extends Activity {
     //obtener nombre de actividad
@@ -17,9 +14,7 @@ public class MainActivity extends Activity {
     private TextView citaTextView;
     private TextView autorTextView;
     private Button nuevaCitaBtn;
-    //doble lista enlazada
-    private ArrayList<ArrayList<String>> contenido = new ArrayList<>();
-    ArrayList<String> campos = new ArrayList<>();
+    private GeneradorCita citas = new GeneradorCita();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,39 +25,15 @@ public class MainActivity extends Activity {
         citaTextView = findViewById(R.id.citaTextView);
         autorTextView = findViewById(R.id.autorTextView);
         nuevaCitaBtn = findViewById(R.id.nuevaCitaBtn);
-
-        //agregar
-        campos.add("autor0");
-        campos.add("cita0");
-        contenido.add(campos);
-
-        campos = new ArrayList<>();
-        campos.add("autor1");
-        campos.add("cita1");
-        contenido.add(campos);
-
-        campos = new ArrayList<>();
-        campos.add("autor2");
-        campos.add("cita2");
-        contenido.add(campos);
     }
 
     //método que se ejecuta al hacer click en el boton.
     public void nuevaCita(View view){
         Log.d(TAG, "nuevaCita: se hizo click");
+        Cita cita = citas.getCitaAleatoria();
 
-        int index = getNumeroAleatorio(contenido.size());
-        String autor = contenido.get(index).get(0);
-        String cita = contenido.get(index).get(1);
+        autorTextView.setText(cita.getAutor());
+        citaTextView.setText(cita.getTexto());
 
-        autorTextView.setText(autor);
-        citaTextView.setText(cita);
-
-    }
-
-    public int getNumeroAleatorio(int max){
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
-        return random.nextInt(max);
     }
 }
