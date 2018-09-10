@@ -60,3 +60,21 @@ public void nuevaCita(View view){
 La función recibe una vista, y el log es para imprimir, en este caso va a imprimir en la actividad que se apretó el boton y el texto q va a enviar.
 
 En LogCat se puede ver el mensaje del log.
+Se puede filtrar por `D/MainActivity`
+
+## Generar número aleatorio de [0,n)
+```java
+public int getNumeroAleatorio(int max){
+    Random random = new Random();
+    random.setSeed(System.currentTimeMillis());
+    return random.nextInt(max);
+}
+```
+
+## Asignación de valores a la variables del layout.
+Recordar que primero se relacionan los elementos con la UI y una vez que estan relacionados, se pueden modificar sus valores.
+```java
+//autor y cita son String.
+autorTextView.setText(autor);
+citaTextView.setText(cita);
+```
