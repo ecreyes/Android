@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">CitasColor</string>
     <string name="textview">TextView</string>
+
+    <string name="cita">Esto será una cita.</string>
+    <string name="autor">Autor</string>
+    <string name="btnNuevaCita">Nueva Cita</string>
 </resources>
