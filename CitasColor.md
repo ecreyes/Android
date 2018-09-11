@@ -78,3 +78,79 @@ Recordar que primero se relacionan los elementos con la UI y una vez que estan r
 autorTextView.setText(autor);
 citaTextView.setText(cita);
 ```
+
+# Ciclos de vida de las actividades
+Los ciclos de vida son parte de las actividades y se pueden sobreescribir.
+Para sobreescribir cualquier método en android studio se presiona Ctrl+O
+
+## Guardar el estado de una actividad.
+El método a sobre-escribir es el `onSaveInstanceState`, el que tiene solo un parámetro.
+```java
+@Override
+protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+}
+```
+Un `Bundle` es simplemente un clave:valor como un diccionario, este utiliza los métodos get para obtener el valor al ingresar una clave y el método put para añadir un clave:valor al Bundle, el put se elige dependiendo del tipo de dato que se quiere guardar.
+Ejemplo:
+```java
+private TextView citaTextView;
+private TextView autorTextView;
+
+//constantes
+private static final String COLOR = "color";
+private static final String AUTOR = "autor";
+private static final String CITA = "cita";
+
+
+@Override
+protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(AUTOR,autorTextView.getText().toString());
+    outState.putString(CITA,citaTextView.getText().toString());
+    outState.putInt(COLOR,citaTextView.getCurrentTextColor());
+}
+```
+notar que antes para asignar valor a estas variables se uso el setText, por eso ahora al llamarlas se utiliza el getText y se convierte a string.
+Entonce le decimos al bundle, guardame este string con (clave,valor).
+Con esto ya tenemos guardado el estado que queriamos de la actividad.
+
+## Obteniendo el estado de la actividad.
+Antes habiamos guardado todo el estado, ahora como obtener ese estado?.
+Existen dos formas, utilizar el bundle que viene por defecto en onCreate o modificar un método onRestoreInstanceState, a continuacion se veran las dos formas.
+
+### Usando el bundle que viene onCreate.
+Solamente hay que preguntar si no esta vacio, de ser asi se recuperan los datos y se asignan a las variables correspondientes:
+```java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    //asignacion de variables con el layout,estas se usan en Java
+    //para modificar el comportamiento en layout.
+    citaTextView = findViewById(R.id.citaTextView);
+    autorTextView = findViewById(R.id.autorTextView);
+    nuevaCitaBtn = findViewById(R.id.nuevaCitaBtn);
+
+    if(savedInstanceState != null){
+        citaTextView.setText(savedInstanceState.getString(CITA));
+        citaTextView.setTextColor(savedInstanceState.getInt(COLOR));
+        autorTextView.setText(savedInstanceState.getString(AUTOR));
+        autorTextView.setTextColor(savedInstanceState.getInt(COLOR));
+    }
+}
+```
+### Usando OnRestoreInstaceState
+Buscar el método `onRestoreInstanceState` y sobre escribirlo.
+```java
+@Override
+protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+
+    citaTextView.setText(savedInstanceState.getString(CITA));
+    citaTextView.setTextColor(savedInstanceState.getInt(COLOR));
+    autorTextView.setText(savedInstanceState.getString(AUTOR));
+    autorTextView.setTextColor(savedInstanceState.getInt(COLOR));
+}
+```
+La única diferencia es que no posee el if para comprobar si es distinto de null.
