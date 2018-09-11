@@ -154,3 +154,23 @@ protected void onRestoreInstanceState(Bundle savedInstanceState) {
 }
 ```
 La única diferencia es que no posee el if para comprobar si es distinto de null.
+
+# El ciclo de vida de las Actividades.
+Las Actividades en Android funcionan como una estructura de datos de tipo Pila.
+Cada vez que una actividad es creada se pone al tope de la pila y se pone en estado de ejecución..
+Pueden haber dos casos:
+* a) La Actividad cubre toda la pantalla, la actividad anterior esta en estado Detenida
+* b) La Actividad es transparente o deja ver cierta parte de la actividad anterior, la Actividad anterior esta en estado de Pausa.
+
+Los Estados de las actividades son:
+* onCreate(): Se incializan las variables,vistas etc, se resive el bundle de las actividades anteriores.
+* onStart(): se llama justo antes de que la actividad se este ejecutando y el usuario aun no puede interactuar.
+* onResume(): se llama cuando la aplicación es visible para el usuario y este puede interactuar, se inicializan animaciones, música etc.
+* Ejecucion: se pone al tope de la pila.
+* onPause(): se pone la actividad en pausa, la actividad esta en el backgraund, se guardan los estados y se detienen las animaciones, hay otra actividad en el tope de la pila.
+* onStop(): Se detiene la Actividad ya que esta no esvisible.
+* onDestroy(): se destruye la actividad.
+* Terminada
+
+extra:
+* onRestart(): Es llamado cuando una actividad detenida es iniciada denuevo.
