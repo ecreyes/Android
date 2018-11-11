@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Uso de Intents</string>
+    <string name="btn_lanzar_mainactivity">Abrir ventana</string>
+    <string name="btn_second_activity">Abrir formulario</string>
+</resources>
