@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,8 +41,28 @@ public class ThirdActivity extends AppCompatActivity {
                 if(!phoneNumber.equals("")){
                     //si la version es de marshmallow hacia adelante (6 en adelante)
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                        //peticion de permiso en tiempo real, esta es asincrona por lo que debe manejarse
-                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PHONE_CALL_CODE);
+                        //si ya esta dado el permiso.
+                        if(revisarPermiso(Manifest.permission.CALL_PHONE)){
+                            Intent intentCall = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+phoneNumber));
+                            startActivity(intentCall);
+                        }else{
+                            //si no esta dado el permiso
+                            if(!shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)){
+                                //si no se le ha preguntando.
+                                //peticion de permiso en tiempo real, esta es asincrona por lo que debe manejarse
+                                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PHONE_CALL_CODE);
+                            }else{
+                                Toast.makeText(ThirdActivity.this, "Permiso denegado", Toast.LENGTH_SHORT).show();
+                                //Intent para abrir la configuración.
+                                Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                i.addCategory(Intent.CATEGORY_DEFAULT);
+                                i.setData(Uri.parse("package:"+getPackageName()));
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                                startActivity(i);
+                            }
+                        }
                     }else{
                         versionAntigua(phoneNumber);
                     }
@@ -55,6 +77,17 @@ public class ThirdActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(ThirdActivity.this,"No se puede realizar la llamada"
                             ,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        ibwWeb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = etWeb.getText().toString();
+                if(url != null && !url.isEmpty()){
+                    Intent intentWeb = new Intent(Intent.ACTION_VIEW,Uri.parse("http://"+url));
+                    startActivity(intentWeb);
                 }
             }
         });
@@ -85,9 +118,8 @@ public class ThirdActivity extends AppCompatActivity {
     }
 
     /*
-        Comprueba si tenemos el permiso pasado como parametro, esto no le va a preguntar al usuario,
-        solo va a revisar si esta en el manifest.
-         */
+    Comprueba si el usuario ha aceptado el permiso.
+    */
     private boolean revisarPermiso(String permiso){
         int resultado = this.checkCallingOrSelfPermission(permiso);
         return resultado == PackageManager.PERMISSION_GRANTED;
